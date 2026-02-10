@@ -91,9 +91,12 @@ app.get('/', (req, res) => {
 app.post('/api/upload', async (req, res) => {
   try {
     const startTime = Date.now();
-    const ip = req.userIp;
+    const ip = req.userIp || req.ip || 'unknown';
+
+    console.log('Upload request received from IP:', ip);
 
     if (!req.files || Object.keys(req.files).length === 0) {
+      console.log('No files in request');
       return res.status(400).json({
         author: process.env.AUTHOR_NAME,
         email: process.env.AUTHOR_EMAIL,
@@ -103,13 +106,14 @@ app.post('/api/upload', async (req, res) => {
     }
 
     const files = Array.isArray(req.files.files) ? req.files.files : [req.files.files];
+    console.log(`Processing ${files.length} files`);
 
-    if (files.length > parseInt(process.env.MAX_FILES_PER_UPLOAD)) {
+    if (files.length > parseInt(process.env.MAX_FILES_PER_UPLOAD || 5)) {
       return res.status(400).json({
         author: process.env.AUTHOR_NAME,
         email: process.env.AUTHOR_EMAIL,
         success: false,
-        error: `Maksimal ${process.env.MAX_FILES_PER_UPLOAD} file per upload`
+        error: `Maksimal ${process.env.MAX_FILES_PER_UPLOAD || 5} file per upload`
       });
     }
 
@@ -118,8 +122,10 @@ app.post('/api/upload', async (req, res) => {
     for (const file of files) {
       const fileId = nanoid(12);
       
+      console.log(`Validating file: ${file.name}`);
       const validation = validateFile(file);
       if (!validation.valid) {
+        console.log(`Validation failed for ${file.name}:`, validation.error);
         uploadResults.push({
           success: false,
           filename: file.name,
@@ -129,8 +135,11 @@ app.post('/api/upload', async (req, res) => {
       }
 
       try {
+        console.log(`Uploading ${file.name} to storage...`);
         const uploadResult = await uploadToStorage(file, fileId);
+        console.log(`Upload successful to ${uploadResult.storage}`);
         
+        console.log(`Saving ${fileId} to database...`);
         await saveFileToDatabase({
           id: fileId,
           name: file.name,
@@ -141,7 +150,7 @@ app.post('/api/upload', async (req, res) => {
           ip: ip
         });
 
-        const fileUrl = `${process.env.VITE_APP_URL}/files/${fileId}/download`;
+        const fileUrl = `${process.env.VITE_APP_URL || 'https://kabox.my.id'}/files/${fileId}/download`;
 
         uploadResults.push({
           success: true,
@@ -162,14 +171,16 @@ app.post('/api/upload', async (req, res) => {
           `Time: ${Date.now() - startTime}ms`
         );
       } catch (error) {
+        console.error(`Error uploading ${file.name}:`, error);
         uploadResults.push({
           success: false,
           filename: file.name,
-          error: error.message
+          error: error.message || 'Upload failed'
         });
       }
     }
 
+    console.log('Upload complete, sending response');
     res.json({
       author: process.env.AUTHOR_NAME,
       email: process.env.AUTHOR_EMAIL,
@@ -178,11 +189,12 @@ app.post('/api/upload', async (req, res) => {
     });
   } catch (error) {
     console.error('Upload error:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       author: process.env.AUTHOR_NAME,
       email: process.env.AUTHOR_EMAIL,
       success: false,
-      error: 'Terjadi kesalahan saat upload'
+      error: error.message || 'Terjadi kesalahan saat upload'
     });
   }
 });
