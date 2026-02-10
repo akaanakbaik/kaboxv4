@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Code2, FileUp, FileDown, Info, Activity } from 'lucide-react';
 
-function ApiDocs() {
+function ApiDocs({ currentLang = 'id' }) {
   const { t } = useTranslation();
 
   const apiEndpoints = [
@@ -99,22 +99,22 @@ function ApiDocs() {
   ];
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen py-6 md:py-12 px-3 md:px-4">
       <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 px-2">
             {t('docs.title')}
           </h1>
-          <p className="text-white/60 text-lg">
+          <p className="text-white/60 text-sm md:text-lg px-2">
             {t('docs.subtitle')}
           </p>
         </motion.div>
 
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           {apiEndpoints.map((endpoint, index) => (
             <motion.div
               key={index}
@@ -123,21 +123,21 @@ function ApiDocs() {
               transition={{ delay: index * 0.1 }}
               className="bg-white/5 border border-white/10 rounded-xl overflow-hidden"
             >
-              <div className="p-6 border-b border-white/10">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <endpoint.icon className="w-6 h-6" />
+              <div className="p-4 md:p-6 border-b border-white/10">
+                <div className="flex items-start justify-between mb-3 md:mb-4 flex-wrap gap-2">
+                  <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="p-1.5 md:p-2 bg-white/10 rounded-lg flex-shrink-0">
+                      <endpoint.icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold">{endpoint.title}</h2>
-                      <p className="text-white/60 text-sm mt-1">
+                      <h2 className="text-lg md:text-2xl font-bold">{endpoint.title}</h2>
+                      <p className="text-white/60 text-xs md:text-sm mt-0.5 md:mt-1">
                         {endpoint.description}
                       </p>
                     </div>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    className={`px-2 md:px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${
                       endpoint.method === 'POST'
                         ? 'bg-green-500/20 text-green-400'
                         : 'bg-blue-500/20 text-blue-400'
@@ -147,28 +147,28 @@ function ApiDocs() {
                   </span>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   <div>
-                    <p className="text-sm text-white/60 mb-2">{t('docs.endpoint')}</p>
-                    <div className="p-3 bg-black/40 rounded-lg font-mono text-sm">
+                    <p className="text-xs md:text-sm text-white/60 mb-2">{t('docs.endpoint')}</p>
+                    <div className="p-2 md:p-3 bg-black/40 rounded-lg font-mono text-xs md:text-sm break-all">
                       {endpoint.endpoint}
                     </div>
                   </div>
 
                   {endpoint.parameters && endpoint.parameters.length > 0 && (
                     <div>
-                      <p className="text-sm text-white/60 mb-2">{t('docs.parameters')}</p>
+                      <p className="text-xs md:text-sm text-white/60 mb-2">{t('docs.parameters')}</p>
                       <div className="space-y-2">
                         {endpoint.parameters.map((param, i) => (
                           <div
                             key={i}
-                            className="p-3 bg-black/40 rounded-lg text-sm"
+                            className="p-2 md:p-3 bg-black/40 rounded-lg text-xs md:text-sm"
                           >
-                            <div className="flex items-center space-x-2 mb-1">
+                            <div className="flex items-center space-x-2 mb-1 flex-wrap">
                               <span className="font-mono font-semibold">
                                 {param.name}
                               </span>
-                              <span className="text-xs px-2 py-0.5 bg-white/10 rounded">
+                              <span className="text-xs px-1.5 md:px-2 py-0.5 bg-white/10 rounded">
                                 {param.type}
                               </span>
                               {param.required && (
@@ -177,7 +177,7 @@ function ApiDocs() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-white/60 text-xs">
+                            <p className="text-white/60 text-xs break-words">
                               {param.description}
                             </p>
                           </div>
@@ -188,20 +188,20 @@ function ApiDocs() {
                 </div>
               </div>
 
-              <div className="p-6 space-y-6">
+              <div className="p-4 md:p-6 space-y-4 md:space-y-6">
                 <div>
-                  <p className="text-sm text-white/60 mb-2 flex items-center space-x-2">
-                    <Code2 className="w-4 h-4" />
+                  <p className="text-xs md:text-sm text-white/60 mb-2 flex items-center space-x-2">
+                    <Code2 className="w-3 h-3 md:w-4 md:h-4" />
                     <span>{t('docs.curlExample')}</span>
                   </p>
-                  <pre className="p-4 bg-black/60 rounded-lg overflow-x-auto text-sm">
+                  <pre className="p-3 md:p-4 bg-black/60 rounded-lg overflow-x-auto text-xs md:text-sm">
                     <code className="text-green-400">{endpoint.curl}</code>
                   </pre>
                 </div>
 
                 <div>
-                  <p className="text-sm text-white/60 mb-2">{t('docs.responseExample')}</p>
-                  <pre className="p-4 bg-black/60 rounded-lg overflow-x-auto text-sm">
+                  <p className="text-xs md:text-sm text-white/60 mb-2">{t('docs.responseExample')}</p>
+                  <pre className="p-3 md:p-4 bg-black/60 rounded-lg overflow-x-auto text-xs md:text-sm">
                     <code className="text-blue-300">
                       {typeof endpoint.response === 'string' && endpoint.response.startsWith('{')
                         ? endpoint.response
@@ -218,36 +218,32 @@ function ApiDocs() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl"
+          className="mt-8 md:mt-12 p-4 md:p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl"
         >
-          <h3 className="text-xl font-bold mb-2 flex items-center space-x-2">
-            <Info className="w-5 h-5 text-blue-400" />
+          <h3 className="text-lg md:text-xl font-bold mb-2 flex items-center space-x-2">
+            <Info className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0" />
             <span>Important Notes</span>
           </h3>
-          <ul className="space-y-2 text-sm text-white/80">
+          <ul className="space-y-2 text-xs md:text-sm text-white/80">
             <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
+              <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
               <span>No API key required - completely free to use</span>
             </li>
             <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
+              <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
               <span>Maximum 5 files per upload request</span>
             </li>
             <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
+              <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
               <span>Each file limited to 100MB</span>
             </li>
             <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
+              <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
               <span>Rate limit: 10 requests per second per IP</span>
             </li>
             <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>Files stored on multi-cloud infrastructure (Cloudinary, ImageKit, Supabase)</span>
-            </li>
-            <li className="flex items-start space-x-2">
-              <span className="text-blue-400 mt-1">•</span>
-              <span>All responses include author information in JSON format</span>
+              <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
+              <span>Files stored on multi-cloud infrastructure</span>
             </li>
           </ul>
         </motion.div>
