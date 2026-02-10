@@ -13,6 +13,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const [currentLang, setCurrentLang] = useState('id');
 
   useEffect(() => {
     const detectLanguage = async () => {
@@ -21,6 +22,7 @@ function App() {
       
       if (langMatch) {
         const detectedLang = langMatch[1];
+        setCurrentLang(detectedLang);
         if (i18n.language !== detectedLang) {
           await i18n.changeLanguage(detectedLang);
         }
@@ -32,11 +34,24 @@ function App() {
           const country = data.country_code;
           const lang = country === 'ID' ? 'id' : 'en';
           
+          setCurrentLang(lang);
           await i18n.changeLanguage(lang);
-          navigate(`/${lang}/~`, { replace: true });
+          
+          if (path === '/' || path === '') {
+            navigate(`/${lang}/~`, { replace: true });
+          } else {
+            navigate(`/${lang}${path}`, { replace: true });
+          }
         } catch (error) {
-          await i18n.changeLanguage('en');
-          navigate('/en/~', { replace: true });
+          const defaultLang = 'en';
+          setCurrentLang(defaultLang);
+          await i18n.changeLanguage(defaultLang);
+          
+          if (path === '/' || path === '') {
+            navigate(`/${defaultLang}/~`, { replace: true });
+          } else {
+            navigate(`/${defaultLang}${path}`, { replace: true });
+          }
         }
         setIsLoading(false);
       }
@@ -54,15 +69,15 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <Header />
+    <div className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
+      <Header currentLang={currentLang} />
       <main className="flex-1">
         <Routes>
-          <Route path="/:lang/~" element={<Home />} />
-          <Route path="/:lang/docs" element={<ApiDocs />} />
-          <Route path="/:lang/terms" element={<Terms />} />
-          <Route path="/" element={<Navigate to={`/${i18n.language}/~`} replace />} />
-          <Route path="*" element={<Navigate to={`/${i18n.language}/~`} replace />} />
+          <Route path="/:lang/~" element={<Home currentLang={currentLang} />} />
+          <Route path="/:lang/docs" element={<ApiDocs currentLang={currentLang} />} />
+          <Route path="/:lang/terms" element={<Terms currentLang={currentLang} />} />
+          <Route path="/" element={<Navigate to={`/${currentLang}/~`} replace />} />
+          <Route path="*" element={<Navigate to={`/${currentLang}/~`} replace />} />
         </Routes>
       </main>
       <Footer />
