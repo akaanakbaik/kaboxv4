@@ -1,0 +1,1 @@
+chmod +x /mnt/user-data/outputs/deploy.sh
