@@ -42,6 +42,7 @@ function Home({ currentLang }) {
 
     setUploading(true);
     setUploadProgress(0);
+    setUploadResults([]);
 
     const formData = new FormData();
     files.forEach((file) => {
@@ -61,42 +62,85 @@ function Home({ currentLang }) {
         }
       });
 
-      console.log('Upload response:', response.data);
+      console.log('Full upload response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response data type:', typeof response.data);
 
-      if (response.data && response.data.success && response.data.data) {
-        const results = response.data.data.filter(item => item.success);
+      if (response.data) {
+        const responseData = response.data;
         
-        if (results.length > 0) {
-          setUploadResults(results);
-          setFiles([]);
-          toast({
-            title: t('upload.success'),
-            description: `${results.length} file berhasil diupload`
-          });
+        if (responseData.success === true) {
+          console.log('Upload successful, data:', responseData.data);
+          
+          if (responseData.data && Array.isArray(responseData.data)) {
+            const successfulUploads = responseData.data.filter(item => {
+              console.log('Processing item:', item);
+              return item && item.success === true && item.id;
+            });
+            
+            console.log('Successful uploads:', successfulUploads);
+            
+            if (successfulUploads.length > 0) {
+              setUploadResults(successfulUploads);
+              setFiles([]);
+              
+              toast({
+                title: t('upload.success') || 'Upload berhasil',
+                description: `${successfulUploads.length} file berhasil diupload`
+              });
+            } else {
+              console.error('No successful uploads found in data');
+              toast({
+                title: 'Upload gagal',
+                description: 'Tidak ada file yang berhasil diupload',
+                variant: 'destructive'
+              });
+            }
+          } else {
+            console.error('Data is not an array:', responseData.data);
+            toast({
+              title: 'Error',
+              description: 'Format response tidak valid',
+              variant: 'destructive'
+            });
+          }
         } else {
+          console.error('Upload not successful:', responseData);
+          const errorMsg = responseData.error || responseData.message || 'Upload gagal';
           toast({
             title: 'Upload gagal',
-            description: 'Tidak ada file yang berhasil diupload',
+            description: errorMsg,
             variant: 'destructive'
           });
         }
+      } else {
+        console.error('No response data');
+        toast({
+          title: 'Error',
+          description: 'Tidak ada response dari server',
+          variant: 'destructive'
+        });
       }
     } catch (error) {
       console.error('Upload error:', error);
-      let errorMessage = t('errors.networkError');
+      console.error('Error response:', error.response);
+      
+      let errorMessage = t('errors.networkError') || 'Kesalahan jaringan';
       
       if (error.response && error.response.data) {
         if (typeof error.response.data.error === 'string') {
           errorMessage = error.response.data.error;
-        } else if (error.response.data.message) {
+        } else if (typeof error.response.data.message === 'string') {
           errorMessage = error.response.data.message;
+        } else if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
         }
       } else if (error.message) {
         errorMessage = error.message;
       }
       
       toast({
-        title: t('errors.uploadFailed'),
+        title: t('errors.uploadFailed') || 'Upload gagal',
         description: errorMessage,
         variant: 'destructive'
       });
@@ -107,7 +151,8 @@ function Home({ currentLang }) {
   };
 
   const copyToClipboard = (text) => {
-    if (!text || text === 'undefined') {
+    if (!text || text === 'undefined' || text === 'null') {
+      console.error('Invalid clipboard text:', text);
       toast({
         title: 'Error',
         description: 'Link tidak tersedia',
@@ -118,7 +163,7 @@ function Home({ currentLang }) {
     
     navigator.clipboard.writeText(text).then(() => {
       toast({
-        title: t('results.copied'),
+        title: t('results.copied') || 'Tersalin!',
         duration: 2000
       });
     }).catch(err => {
@@ -136,7 +181,7 @@ function Home({ currentLang }) {
   };
 
   const formatFileSize = (bytes) => {
-    if (!bytes || isNaN(bytes)) return '0 MB';
+    if (!bytes || isNaN(bytes) || bytes === 0) return '0 MB';
     const mb = bytes / 1024 / 1024;
     return mb.toFixed(2) + ' MB';
   };
