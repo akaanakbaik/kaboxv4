@@ -9,55 +9,72 @@ function Terms({ currentLang = 'id' }) {
     {
       icon: Shield,
       title: t('terms.acceptance'),
-      content: t('terms.acceptanceText')
+      content: t('terms.acceptanceText'),
+      isList: false
     },
     {
       icon: Database,
       title: t('terms.service'),
-      content: t('terms.serviceText')
+      content: t('terms.serviceText'),
+      isList: false
     },
     {
       icon: Lock,
       title: t('terms.usage'),
-      content: t('terms.usageText')
+      content: t('terms.usageText'),
+      isList: false
     },
     {
       icon: Ban,
       title: t('terms.prohibited'),
-      content: t('terms.prohibitedItems'),
+      content: 'prohibitedItems',
       isList: true
     },
     {
       icon: AlertTriangle,
       title: t('terms.limits'),
-      content: t('terms.limitsText')
+      content: t('terms.limitsText'),
+      isList: false
     },
     {
       icon: Lock,
       title: t('terms.privacy'),
-      content: t('terms.privacyText')
+      content: t('terms.privacyText'),
+      isList: false
     },
     {
       icon: Shield,
       title: t('terms.liability'),
-      content: t('terms.liabilityText')
+      content: t('terms.liabilityText'),
+      isList: false
     },
     {
       icon: Ban,
       title: t('terms.termination'),
-      content: t('terms.terminationText')
+      content: t('terms.terminationText'),
+      isList: false
     },
     {
       icon: RefreshCw,
       title: t('terms.changes'),
-      content: t('terms.changesText')
+      content: t('terms.changesText'),
+      isList: false
     },
     {
       icon: Mail,
       title: t('terms.contact'),
-      content: t('terms.contactText')
+      content: t('terms.contactText'),
+      isList: false
     }
   ];
+
+  const getContent = (section) => {
+    if (section.isList && section.content === 'prohibitedItems') {
+      const items = t('terms.prohibitedItems', { returnObjects: true });
+      return Array.isArray(items) ? items : [];
+    }
+    return section.content;
+  };
 
   return (
     <div className="min-h-screen py-6 md:py-12 px-3 md:px-4">
@@ -96,36 +113,40 @@ function Terms({ currentLang = 'id' }) {
         </motion.div>
 
         <div className="space-y-4 md:space-y-6">
-          {sections.map((section, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
-              className="bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 card-hover"
-            >
-              <div className="flex items-start space-x-3 md:space-x-4">
-                <div className="p-2 md:p-3 bg-white/10 rounded-lg flex-shrink-0">
-                  <section.icon className="w-5 h-5 md:w-6 md:h-6" />
+          {sections.map((section, index) => {
+            const content = getContent(section);
+            
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                className="bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 card-hover"
+              >
+                <div className="flex items-start space-x-3 md:space-x-4">
+                  <div className="p-2 md:p-3 bg-white/10 rounded-lg flex-shrink-0">
+                    <section.icon className="w-5 h-5 md:w-6 md:h-6" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{section.title}</h2>
+                    {section.isList ? (
+                      <ul className="space-y-1.5 md:space-y-2">
+                        {Array.isArray(content) && content.map((item, i) => (
+                          <li key={i} className="flex items-start space-x-2 text-white/80 text-xs md:text-sm">
+                            <span className="text-red-400 mt-1 flex-shrink-0">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-white/80 leading-relaxed text-xs md:text-sm break-words">{content}</p>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{section.title}</h2>
-                  {section.isList ? (
-                    <ul className="space-y-1.5 md:space-y-2">
-                      {section.content.map((item, i) => (
-                        <li key={i} className="flex items-start space-x-2 text-white/80 text-xs md:text-sm">
-                          <span className="text-red-400 mt-1 flex-shrink-0">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-white/80 leading-relaxed text-xs md:text-sm break-words">{section.content}</p>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
