@@ -55,6 +55,7 @@
     "react-router-dom": "^6.21.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "terser": "5.46.0",
     "uuid": "^9.0.1",
     "validator": "^13.11.0",
     "xss": "^1.0.14"
