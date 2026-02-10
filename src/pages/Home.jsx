@@ -71,9 +71,21 @@ function Home() {
       }
     } catch (error) {
       console.error('Upload error:', error);
+      let errorMessage = t('errors.networkError');
+      
+      if (error.response && error.response.data) {
+        if (typeof error.response.data.error === 'string') {
+          errorMessage = error.response.data.error;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: t('errors.uploadFailed'),
-        description: error.response?.data?.error || t('errors.networkError'),
+        description: errorMessage,
         variant: 'destructive'
       });
     } finally {
