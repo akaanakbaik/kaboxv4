@@ -1,31 +1,30 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Home, FileText, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-function Header() {
+function Header({ currentLang = 'id' }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { t } = useTranslation();
-  const { lang } = useParams();
 
   const menuItems = [
-    { path: `/${lang}/~`, label: t('nav.home'), icon: Home },
-    { path: `/${lang}/docs`, label: t('nav.docs'), icon: FileText },
-    { path: `/${lang}/terms`, label: t('nav.terms'), icon: Shield }
+    { path: `/${currentLang}/~`, label: t('nav.home'), icon: Home },
+    { path: `/${currentLang}/docs`, label: t('nav.docs'), icon: FileText },
+    { path: `/${currentLang}/terms`, label: t('nav.terms'), icon: Shield }
   ];
 
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/80 backdrop-blur-lg">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to={`/${lang}/~`} className="flex items-center space-x-2 group">
+        <div className="container mx-auto px-3 md:px-4 h-14 md:h-16 flex items-center justify-between">
+          <Link to={`/${currentLang}/~`} className="flex items-center space-x-2 group">
             <img 
               src="https://raw.githubusercontent.com/akaanakbaik/my-cdn/main/logokaboxnobg.png"
               alt="Kabox Logo"
-              className="h-8 w-8 transition-transform group-hover:scale-110"
+              className="h-7 w-7 md:h-8 md:w-8 transition-transform group-hover:scale-110"
             />
-            <span className="text-lg font-bold tracking-tight">
+            <span className="text-base md:text-lg font-bold tracking-tight">
               {t('header.brand')}
             </span>
           </Link>
@@ -36,9 +35,9 @@ function Header() {
             aria-label="Toggle menu"
           >
             {sidebarOpen ? (
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 md:w-6 md:h-6" />
             ) : (
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5 md:w-6 md:h-6" />
             )}
           </button>
         </div>
@@ -64,7 +63,7 @@ function Header() {
               className="fixed top-0 right-0 h-full w-full sm:w-80 bg-black border-l border-white/10 z-50 flex flex-col"
             >
               <div className="flex items-center justify-between p-4 border-b border-white/10">
-                <span className="text-lg font-bold">{t('header.brand')}</span>
+                <span className="text-base md:text-lg font-bold">{t('header.brand')}</span>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-2 rounded-lg hover:bg-white/10 transition-colors"
@@ -87,7 +86,7 @@ function Header() {
                       className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group"
                     >
                       <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                      <span className="font-medium">{item.label}</span>
+                      <span className="font-medium text-sm md:text-base">{item.label}</span>
                     </Link>
                   </motion.div>
                 ))}
