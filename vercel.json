@@ -13,28 +13,22 @@
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server/index.js"
-    },
-    {
-      "src": "/files/(.*)",
-      "dest": "/server/index.js"
-    },
-    {
-      "src": "/(id|en)/(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server/index.js"
-    }
-  ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
+      "destination": "/server/index.js"
+    },
+    {
+      "source": "/files/(.*)",
+      "destination": "/server/index.js"
+    },
+    {
+      "source": "/(id|en)/(.*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/server/index.js"
     }
   ],
   "headers": [
