@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Shield, AlertTriangle, Lock, Database, Ban, RefreshCw, Mail } from 'lucide-react';
 
-function Terms() {
+function Terms({ currentLang = 'id' }) {
   const { t } = useTranslation();
 
   const sections = [
@@ -60,20 +60,20 @@ function Terms() {
   ];
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen py-6 md:py-12 px-3 md:px-4">
       <div className="container mx-auto max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 px-2">
             {t('terms.title')}
           </h1>
-          <p className="text-white/60 text-lg mb-2">
+          <p className="text-white/60 text-sm md:text-lg mb-2 px-2">
             {t('terms.subtitle')}
           </p>
-          <p className="text-sm text-white/40">
+          <p className="text-xs md:text-sm text-white/40 px-2">
             {t('terms.updated')}: 10 Februari 2025
           </p>
         </motion.div>
@@ -82,45 +82,45 @@ function Terms() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="mb-8 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl"
+          className="mb-6 md:mb-8 p-4 md:p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl"
         >
-          <div className="flex items-start space-x-3">
-            <AlertTriangle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start space-x-2 md:space-x-3">
+            <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-yellow-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-bold text-yellow-400 mb-2">Penting untuk Dibaca</h3>
-              <p className="text-sm text-white/80">
+              <h3 className="font-bold text-yellow-400 mb-2 text-sm md:text-base">Penting untuk Dibaca</h3>
+              <p className="text-xs md:text-sm text-white/80">
                 Dengan menggunakan layanan Kabox, Anda secara otomatis menyetujui seluruh syarat dan ketentuan yang tercantum di halaman ini. Harap baca dengan seksama sebelum menggunakan layanan kami.
               </p>
             </div>
           </div>
         </motion.div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {sections.map((section, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index }}
-              className="bg-white/5 border border-white/10 rounded-xl p-6 card-hover"
+              className="bg-white/5 border border-white/10 rounded-xl p-4 md:p-6 card-hover"
             >
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-white/10 rounded-lg flex-shrink-0">
-                  <section.icon className="w-6 h-6" />
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <div className="p-2 md:p-3 bg-white/10 rounded-lg flex-shrink-0">
+                  <section.icon className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold mb-3">{section.title}</h2>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{section.title}</h2>
                   {section.isList ? (
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5 md:space-y-2">
                       {section.content.map((item, i) => (
-                        <li key={i} className="flex items-start space-x-2 text-white/80">
+                        <li key={i} className="flex items-start space-x-2 text-white/80 text-xs md:text-sm">
                           <span className="text-red-400 mt-1 flex-shrink-0">•</span>
                           <span>{item}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-white/80 leading-relaxed">{section.content}</p>
+                    <p className="text-white/80 leading-relaxed text-xs md:text-sm break-words">{section.content}</p>
                   )}
                 </div>
               </div>
@@ -132,11 +132,11 @@ function Terms() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="mt-12 p-6 bg-white/5 border border-white/10 rounded-xl"
+          className="mt-8 md:mt-12 p-4 md:p-6 bg-white/5 border border-white/10 rounded-xl"
         >
-          <h3 className="text-xl font-bold mb-4">Ringkasan Penting</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div className="p-4 bg-black/30 rounded-lg">
+          <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Ringkasan Penting</h3>
+          <div className="grid md:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
+            <div className="p-3 md:p-4 bg-black/30 rounded-lg">
               <h4 className="font-semibold text-green-400 mb-2">Yang Boleh</h4>
               <ul className="space-y-1 text-white/70">
                 <li>✓ Upload file legal dan sah</li>
@@ -146,7 +146,7 @@ function Terms() {
                 <li>✓ Penggunaan pribadi dan komersial</li>
               </ul>
             </div>
-            <div className="p-4 bg-black/30 rounded-lg">
+            <div className="p-3 md:p-4 bg-black/30 rounded-lg">
               <h4 className="font-semibold text-red-400 mb-2">Yang Dilarang</h4>
               <ul className="space-y-1 text-white/70">
                 <li>✗ Konten ilegal atau berbahaya</li>
@@ -163,27 +163,27 @@ function Terms() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
-          className="mt-8 p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl"
+          className="mt-6 md:mt-8 p-4 md:p-6 bg-blue-500/10 border border-blue-500/20 rounded-xl"
         >
-          <h3 className="font-bold mb-2">Butuh Bantuan?</h3>
-          <p className="text-sm text-white/80 mb-4">
+          <h3 className="font-bold mb-2 text-sm md:text-base">Butuh Bantuan?</h3>
+          <p className="text-xs md:text-sm text-white/80 mb-3 md:mb-4">
             Jika Anda memiliki pertanyaan atau memerlukan klarifikasi mengenai syarat dan ketentuan ini, jangan ragu untuk menghubungi kami.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 md:gap-3">
             <a
               href="mailto:akaanakbaik17@proton.me"
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm"
+              className="inline-flex items-center space-x-2 px-3 py-2 md:px-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-xs md:text-sm"
             >
-              <Mail className="w-4 h-4" />
-              <span>akaanakbaik17@proton.me</span>
+              <Mail className="w-3 h-3 md:w-4 md:h-4" />
+              <span className="truncate">akaanakbaik17@proton.me</span>
             </a>
             <a
               href="https://t.me/akamodebaik"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm"
+              className="inline-flex items-center space-x-2 px-3 py-2 md:px-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-xs md:text-sm"
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.053 5.56-5.023c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
               </svg>
               <span>@akamodebaik</span>
@@ -195,7 +195,7 @@ function Terms() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-8 text-center text-sm text-white/40"
+          className="mt-6 md:mt-8 text-center text-xs md:text-sm text-white/40 px-2"
         >
           <p>© 2025 Kabox. Hak cipta dilindungi undang-undang.</p>
           <p className="mt-2">
